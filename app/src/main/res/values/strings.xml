@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">NewsApiAndroidApp</string>
-    <string name="search_action">Search</string>
+    <string name="search_action">Refresh</string>
     <string name="waiting_for_search"></string>
 </resources>

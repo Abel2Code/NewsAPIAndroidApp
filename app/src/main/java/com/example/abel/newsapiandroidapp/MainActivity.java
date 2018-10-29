@@ -1,6 +1,5 @@
 package com.example.abel.newsapiandroidapp;
 
-import android.net.Network;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.search_action) {
+        if (id == R.id.get_news) {
             Bundle bundle = new Bundle();
             LoaderManager loaderManager = getSupportLoaderManager();
             Loader<String> newsSearchLoader = loaderManager.getLoader(LOADER_ID);
