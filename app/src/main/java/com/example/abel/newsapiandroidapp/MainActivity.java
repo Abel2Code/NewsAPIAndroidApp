@@ -5,6 +5,8 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -13,10 +15,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.abel.newsapiandroidapp.model.NewsItem;
+import com.example.abel.newsapiandroidapp.utilities.JsonUtils;
 import com.example.abel.newsapiandroidapp.utilities.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
     private static final String TAG = "MainActivity";
@@ -27,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar mProgressBar;
     private TextView mTextView;
 
+    private RecyclerView mRecyclerView;
+    private NewsAdapter mAdapter;
+    private ArrayList<NewsItem> newsItems = new ArrayList<>();
+
 
 
     @Override
@@ -34,6 +43,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         onCreateLoader(0 , savedInstanceState);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.news_recyclerview);
+        mAdapter = new NewsAdapter(this, newsItems);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
@@ -88,7 +102,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void populateWithNewsData(String data){
         mTextView.setText(data);
     }
+    private void populateRecyclerView(String searchResults){
+        newsItems = JsonUtils.parseNews(searchResults);
+        mAdapter.mNewsItems.addAll(newsItems);
+        mAdapter.notifyDataSetChanged();
 
+    }
     @Override
     public android.support.v4.content.Loader<String> onCreateLoader(int id, final Bundle args) {
         Log.d(TAG, NetworkUtils.buildUrl() + "\n\n\n\n\n");
@@ -126,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Log.d("mycode", data);
         mProgressBar.setVisibility(View.GONE);
         populateWithNewsData(data);
+        populateRecyclerView(data);
     }
 
     @Override
